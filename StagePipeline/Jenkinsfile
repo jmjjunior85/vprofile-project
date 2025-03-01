@@ -1,12 +1,15 @@
-pipeline {
-    
-	agent any
+def COLOR_MAP = [
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
+]
 
-	tools {
+pipeline {
+    agent any
+    tools {
         maven "MAVEN3.9"
         jdk "JDK17"
     }
-
+    
     environment {
         SNAP_REPO = 'vprofile-snapshot'
 		NEXUS_USER = 'admin'
@@ -19,11 +22,8 @@ pipeline {
         NEXUS_LOGIN = 'nexuslogin'
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
-        registryCredential = 'ecr:us-east-1:awscreds'
-        appRegistry = '164348890293.dkr.ecr.us-east-1.amazonaws.com/vprofileappimg'
-        vprofileRegistry = "https://164348890293.dkr.ecr.us-east-1.amazonaws.com"
     }
-	
+
     stages {
         stage('Build'){
             steps {
@@ -95,25 +95,6 @@ pipeline {
             }
         }
 
-        stage('Build App Image') {
-            steps {
-                script {
-                    dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
-                }
-            }
-        }
-
-        stage('Upload App Image') {
-            steps {
-                script {
-                    docker.withRegistry( vprofileRegistry, registryCredential ) {
-                        dockerImage.push("$BUILD_NUMBER")
-                        dockerImage.push('latest')
-                    }
-                }
-            }
-        }
-
     }
     post {
         always {
@@ -121,8 +102,8 @@ pipeline {
             slackSend channel: '#jenks-cicd',
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-            }
+        }
     }
-
-
 }
+
+
