@@ -26,7 +26,7 @@ pipeline {
         AWS_S3_BUCKET = "vprocicdbean85"
         AWS_EB_APP_NAME = "vproapp"
         AWS_EB_ENVIRONMENT = "Vproapp-env"
-        AWS_EB_APP_VERSION = ${BUILD_ID}
+        AWS_EB_APP_VERSION = "${BUILD_ID}"
     }
 
     stages {
