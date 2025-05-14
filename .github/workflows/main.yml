@@ -15,6 +15,12 @@ jobs:
       - name: who am i
         run: whoami
 
+      - name: make dir
+        run: mkdir moneybag
+
+      - name: read message
+        run: echo ${{ env.REGISTRY }}
+
       - name: code checkout
         uses: actions/checkout@v4
 
