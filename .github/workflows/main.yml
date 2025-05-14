@@ -30,6 +30,9 @@ jobs:
       - name: list dir second
         run: ls
 
+      - name: pwd
+        run: pwd
+
       - name: maven test
         run: mvn test
 
