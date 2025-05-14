@@ -1,0 +1,28 @@
+name: My Vprofile Project
+on: workflow_dispatch
+env:
+  REGISTRY: us-east-3
+jobs:
+  Testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: list dir
+        run: ls
+
+      - name: pwd
+        run: pwd
+
+      - name: who am i
+        run: whoami
+
+      - name: code checkout
+        uses: actions/checkout@v4
+
+      - name: list dir second
+        run: ls
+
+      - name: maven test
+        run: mvn test
+
+      - name: list dir third
+        run: ls
