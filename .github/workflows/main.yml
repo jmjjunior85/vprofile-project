@@ -18,6 +18,9 @@ jobs:
       - name: make dir
         run: mkdir moneybag
 
+      - name: list dir
+        run: ls
+
       - name: read message
         run: echo ${{ env.REGISTRY }}
 
