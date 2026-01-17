@@ -2,7 +2,7 @@
   hosts: appsrvgrp
   become: yes
   vars:
-    tom_url: https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.gz
+    tom_url: https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.48/bin/apache-tomcat-10.1.48.tar.gz #https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.gz
 
   tasks:
     - name: Install JDK on Centos 6/7
@@ -13,7 +13,7 @@
 
     - name: Install JDK on Ubuntu 14/15/16/18
       apt:
-        name: openjdk-8-jdk
+        name: openjdk-17-jdk
         state: present
         update_cache: yes
       when: ansible_distribution == 'Ubuntu' 
@@ -21,7 +21,7 @@
     - name: Download Tomcat Tar Ball/Binaries
       get_url:
         url: "{{tom_url}}"
-        dest: /tmp/tomcat-8.tar.gz
+        dest: /tmp/tomcat-10.tar.gz
 
     - name: Add tomcat group
       group:
@@ -33,16 +33,16 @@
         name: tomcat
         group: tomcat
         shell: /bin/nologin
-        home: /usr/local/tomcat8
+        home: /usr/local/tomcat10
 
     - file:
-        path: /tmp/tomcat8
+        path: /tmp/tomcat10
         state: directory
 
     - name: Extract tomcat
       unarchive:
-        src: /tmp/tomcat-8.tar.gz
-        dest: /tmp/tomcat8/
+        src: /tmp/tomcat-10.tar.gz
+        dest: /tmp/tomcat10/
         remote_src: yes
         list_files: yes
       register: unarchive_info
@@ -50,15 +50,15 @@
     - debug:
         msg: "{{unarchive_info.files[0].split('/')[0]}}"
 
-    - name: Synchronize /tmp/tomcat8/tomcat_cont /usr/local/tomcat8.
+    - name: Synchronize /tmp/tomcat10/tomcat_cont /usr/local/tomcat10.
       synchronize:
-        src: "/tmp/tomcat8/{{unarchive_info.files[0].split('/')[0]}}/"
-        dest: /usr/local/tomcat8/
+        src: "/tmp/tomcat10/{{unarchive_info.files[0].split('/')[0]}}/"
+        dest: /usr/local/tomcat10/
       delegate_to: "{{ inventory_hostname }}"
 
-    - name: Change ownership of /usr/local/tomcat8
+    - name: Change ownership of /usr/local/tomcat10
       file:
-        path: /usr/local/tomcat8
+        path: /usr/local/tomcat10
         owner: tomcat
         group: tomcat
         recurse: yes
