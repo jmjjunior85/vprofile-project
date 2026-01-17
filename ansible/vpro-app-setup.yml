@@ -21,7 +21,7 @@
 
     - name: Stop tomcat svc
       service:
-        name: tomcat
+        name: tomcat10
         state: stopped
       tags:
        - deploy
@@ -71,12 +71,12 @@
       rescue:
        - name: Start tomcat svc
          service:
-          name: tomcat
+          name: tomcat10
           state: started
 
     - name: Start tomcat svc
       service:
-        name: tomcat
+        name: tomcat10
         state: started
       when: deploy_info.changed
       tags:
@@ -101,5 +101,5 @@
   handlers:
    - name: Restart Tomcat
      service:
-      name: tomcat
+      name: tomcat10
       state: restarted
